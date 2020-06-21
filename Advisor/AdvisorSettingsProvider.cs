@@ -63,7 +63,7 @@ namespace HDT.Plugins.Advisor
             foreach (SettingsProperty settingsProperty in collection)
             {
                 var value = new SettingsPropertyValue(settingsProperty);
-                
+
                 if (values != null && values.TryGetValue(settingsProperty.Name, out var serializedValue))
                 {
                     value.SerializedValue = serializedValue;
@@ -94,7 +94,10 @@ namespace HDT.Plugins.Advisor
         {
             var provider = new AdvisorSettingsProvider();
 
-            Settings.Default.Providers.Add(provider);
+            if (Settings.Default.Providers[provider.Name] == null)
+            {
+                Settings.Default.Providers.Add(provider);
+            }
             foreach (SettingsProperty prop in Settings.Default.Properties)
             {
                 prop.Provider = provider;

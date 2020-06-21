@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Advisor", "Advisor\Advisor.csproj", "{392B67C8-4A13-4259-AA0F-09F3B0AC7669}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvisorTest", "AdvisorTest\AdvisorTest.csproj", "{A358DA64-5AF7-4188-89A3-537307980C6F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{392B67C8-4A13-4259-AA0F-09F3B0AC7669}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{392B67C8-4A13-4259-AA0F-09F3B0AC7669}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{392B67C8-4A13-4259-AA0F-09F3B0AC7669}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A358DA64-5AF7-4188-89A3-537307980C6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A358DA64-5AF7-4188-89A3-537307980C6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A358DA64-5AF7-4188-89A3-537307980C6F}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{A358DA64-5AF7-4188-89A3-537307980C6F}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

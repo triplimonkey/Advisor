@@ -9,7 +9,7 @@ using System.Windows.Controls;
 using HDT.Plugins.Advisor.Layout;
 using HDT.Plugins.Advisor.Properties;
 using HDT.Plugins.Advisor.Services;
-using HDT.Plugins.Advisor.Services.MetaStats;
+using HDT.Plugins.Advisor.Services.HsReplay;
 using Hearthstone_Deck_Tracker;
 using Hearthstone_Deck_Tracker.Enums;
 using Hearthstone_Deck_Tracker.Hearthstone;
@@ -357,7 +357,7 @@ namespace HDT.Plugins.Advisor
             try
             {
                 // TODO: Get back to the IArchetypeImporter interface?
-                var importer = new SnapshotImporter(new TrackerRepository());
+                var importer = new HsReplaySnapshotImporter(new TrackerRepository());
                 var count = await importer.ImportDecks(
                     Settings.Default.AutoArchiveArchetypes,
                     Settings.Default.DeletePreviouslyImported,
@@ -388,7 +388,7 @@ namespace HDT.Plugins.Advisor
         {
             try
             {
-                var importer = new SnapshotImporter(new TrackerRepository());
+                var importer = new HsReplaySnapshotImporter(new TrackerRepository());
                 var count = importer.DeleteDecks();
                 // Refresh decklist
                 Core.MainWindow.LoadAndUpdateDecks();
