@@ -231,6 +231,8 @@ namespace HDT.Plugins.Advisor
                 // Some unreproducable bug threw an exception here. System.InvalidOperationException: Sequence contains no elements @ IEnumerable.Max() => should be fixed by DefaultIfEmpty() now!
                 var maxSim = dict.Values.DefaultIfEmpty(0).Max();
 
+                Log.Info($"decksFound: { dict.Count }, opponent: {CoreAPI.Game.Opponent.Class}, maxSim: { maxSim }");
+
                 // If any archetype deck matches more than MinimumSimilarity (as percentage) show the deck with the highest similarity (important: we need at least 1 deck in dict, otherwise we can't show any results.)
                 if (dict.Count > 0 && maxSim >= Settings.Default.MinimumSimilarity * 0.01)
                 {
@@ -255,8 +257,9 @@ namespace HDT.Plugins.Advisor
                         _advisorOverlay.LblArchetype.Text = $"{matchedDeck.Key.Name} ({Math.Round(matchedDeck.Value * 100, 2)}%)";
                     }
 
-                    _advisorOverlay.LblStats.Text = matchedDeck.Key.Note;
-                    var deck = DeckList.Instance.Decks.Where(d => d.TagList.ToLowerInvariant().Contains("archetype")).First(d => d.Name == matchedDeck.Key.Name);
+                    string[] infos = matchedDeck.Key.Note.Split('-');
+                    _advisorOverlay.LblStats.Text = $"{ infos[1] }/{ infos[2] }%";
+                    var deck = DeckList.Instance.Decks.Where(d => d.TagList.ToLowerInvariant().Contains("archetype")).First(d => d.Note.Split('-')[0] == matchedDeck.Key.Note.Split('-')[0]);
 
                     var predictedCards = ((Deck) deck.Clone()).Cards.ToList();
 
@@ -308,9 +311,12 @@ namespace HDT.Plugins.Advisor
                     }
 
                     // Update overlay cards.
+                    isNewArchetypeDeck = true;
                     _advisorOverlay.Update(predictedCards.ToSortedCardList(), isNewArchetypeDeck);
                     // Remember current archetype deck guid with highest similarity to opponent's played cards.
                     _currentArchetypeDeckGuid = matchedDeck.Key.DeckId;
+
+                    Log.Info($"Deck: { matchedDeck.Key.DeckId } , { infos[0] }, { matchedDeck.Key.Class }, { isNewArchetypeDeck }");
                 }
                 else
                 {
@@ -352,7 +358,7 @@ namespace HDT.Plugins.Advisor
 
         public static async Task ImportMetastatsDecks()
         {
-            //construct Progress<T>, passing ReportProgress as the Action<T> 
+            //construct Progress<T>, passing ReportProgress as the Action<T>
             var progressIndicator = new Progress<Tuple<int, int>>(ReportProgress);
             try
             {

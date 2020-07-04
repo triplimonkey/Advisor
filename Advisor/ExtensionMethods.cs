@@ -68,7 +68,8 @@ namespace HDT.Plugins.Advisor
         /// <returns>Number of played games with the given deck. If no info is found or parse is unsuccessful, return 0.</returns>
         public static int GetPlayedGames(this Deck thisDeck)
         {
-            var success = int.TryParse(Regex.Match(thisDeck.Note, @"Games: ([0-9]+)").Groups[1].Value, out var result);
+            string[] infos = thisDeck.Note.Split('-');
+            var success = int.TryParse(infos[1], out int result);
             return success ? result : 0;
         }
     }

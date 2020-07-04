@@ -107,6 +107,7 @@ namespace HDT.Plugins.Advisor.Services.HsReplay
             deck.Class = hsReplayClassToDeckTrackerClass[archetype.Class];
             deck.Cards = GetCardsFromHsReplayDeckList(hsReplayDeck.DeckList);
             deck.LastEdited = DateTime.Now;
+            deck.Note = hsReplayDeck.DeckId + "-" + hsReplayDeck.TotalGames + "-" + hsReplayDeck.WinRate;
 
             return deck;
         }
@@ -182,6 +183,12 @@ namespace HDT.Plugins.Advisor.Services.HsReplay
 
             [JsonProperty("deck_list")]
             public string DeckList { get; set; }
+
+            [JsonProperty("total_games")]
+            public string TotalGames { get; set; }
+
+            [JsonProperty("win_rate")]
+            public string WinRate { get; set; }
 
             public string Name { get; set; }
             public string ClassId { get; set; }
