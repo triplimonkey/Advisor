@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -268,7 +268,12 @@ namespace HDT.Plugins.Advisor
                         // Remove already played opponent cards from predicted archetype deck. But don't remove revealed jousted cards, because they were only seen and not played yet.
                         if (predictedCards.Contains(card))
                         {
-                            var item = predictedCards.Find(x => x.Id == card.Id);
+                            // var item = predictedCards.Find(x => x.Id == card.Id); // previous version
+                            var item = predictedCards.Find(x => x.Id == card.Id || x.Id.Equals(card.Id)); // trying this vriation
+                            //var match = predictedCards.FirstOrDefault(stringToCheck => stringToCheck.Contains(myString)); // if thee above doesn't work, try this?
+
+                            // fixes nullpointer, not sure whats the problem, maybe its gift cards, maybe cards not on preddicted list (like cthun cards)
+                            if (item == null) continue;
 
                             if (!card.Jousted)
                             {
