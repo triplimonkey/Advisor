@@ -80,11 +80,11 @@ namespace HDT.Plugins.Advisor
         {
         }
 
-        public Version Version => new Version(1, 2, 0);
+        public Version Version => new Version(1, 3, 0);
 
         public async Task CheckForUpdate()
         {
-            var latest = await Github.CheckForUpdate("kimsey0", "Advisor", Version);
+            var latest = await Github.CheckForUpdate("icetbr", "Advisor", Version);
             if (latest != null)
             {
                 Advisor.Notify("Plugin update available", $"[DOWNLOAD]({latest.HtmlUrl}) Advisor {latest.TagName}", 0,

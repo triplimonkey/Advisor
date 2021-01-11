@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -17,6 +17,7 @@ using Hearthstone_Deck_Tracker.Utility.Extensions;
 using Hearthstone_Deck_Tracker.Utility.Logging;
 using MahApps.Metro.Controls;
 using CoreAPI = Hearthstone_Deck_Tracker.API.Core;
+using Newtonsoft.Json;
 
 namespace HDT.Plugins.Advisor
 {
@@ -26,6 +27,7 @@ namespace HDT.Plugins.Advisor
         private static Flyout _notificationFlyout;
         private readonly AdvisorOverlay _advisorOverlay;
         private Guid _currentArchetypeDeckGuid;
+        private IList<Card> opponentCardList;
 
         public Advisor(AdvisorOverlay overlay)
         {
@@ -141,6 +143,7 @@ namespace HDT.Plugins.Advisor
                 _advisorOverlay.Update(new List<Card>(), true);
                 _currentArchetypeDeckGuid = Guid.Empty;
 
+                opponentCardList = new List<Card>();
                 UpdateCardList();
                 _advisorOverlay.Show();
             }
@@ -210,7 +213,20 @@ namespace HDT.Plugins.Advisor
             }
 
             // Get opponent's cards list (all yet revealed cards)
-            IList<Card> opponentCardlist = Core.Game.Opponent.OpponentCardList.Where(x => !x.IsCreated).ToList();
+            IList<Card> newOpponentCardlist = Core.Game.Opponent.OpponentCardList.Where(x => !x.IsCreated).ToList();
+            foreach (var card in newOpponentCardlist)
+            {
+                if (!opponentCardList.Contains(card))
+                {
+                    opponentCardList.Add(card);
+                }
+                else
+                {
+                    var foundCard = opponentCardList.FirstOrDefault(x => x.Id == card.Id || x.Id.Equals(card.Id));
+                    if (foundCard == null) continue;
+                    foundCard.Count = card.Count;
+                }
+            }
 
             // If opponent's class is unknown yet or we have no imported archetype decks in the database, return empty card list
             if (CoreAPI.Game.Opponent.Class == "" || !ArchetypeDecks.Any())
@@ -225,7 +241,7 @@ namespace HDT.Plugins.Advisor
                 IDictionary<Deck, float> dict = ArchetypeDecks
                     .Where(d => d.Class == CoreAPI.Game.Opponent.Class && !(d.IsWildDeck && CoreAPI.Game.CurrentFormat == Format.Standard))
                     .Distinct()
-                    .ToDictionary(d => d, d => d.Similarity(opponentCardlist));
+                    .ToDictionary(d => d, d => d.Similarity(opponentCardList));
 
                 // Get highest similarity value
                 // Some unreproducable bug threw an exception here. System.InvalidOperationException: Sequence contains no elements @ IEnumerable.Max() => should be fixed by DefaultIfEmpty() now!
@@ -249,8 +265,8 @@ namespace HDT.Plugins.Advisor
                     if (Settings.Default.ShowAbsoluteSimilarity)
                     {
                         // Count how many cards from opponent deck are in matched deck
-                        var matchingCards = matchedDeck.Key.CountMatchingCards(opponentCardlist);
-                        _advisorOverlay.LblArchetype.Text = $"{matchedDeck.Key.Name} ({matchingCards}/{matchedDeck.Key.CountUnion(opponentCardlist)})";
+                        var matchingCards = matchedDeck.Key.CountMatchingCards(opponentCardList);
+                        _advisorOverlay.LblArchetype.Text = $"{matchedDeck.Key.Name} ({matchingCards}/{matchedDeck.Key.CountUnion(opponentCardList)})";
                     }
                     else
                     {
@@ -263,7 +279,7 @@ namespace HDT.Plugins.Advisor
 
                     var predictedCards = ((Deck) deck.Clone()).Cards.ToList();
 
-                    foreach (var card in opponentCardlist)
+                    foreach (var card in opponentCardList)
                     {
                         // Remove already played opponent cards from predicted archetype deck. But don't remove revealed jousted cards, because they were only seen and not played yet.
                         if (predictedCards.Contains(card))
@@ -328,7 +344,7 @@ namespace HDT.Plugins.Advisor
                     // If no archetype deck matches more than MinimumSimilarity clear the list and show the best match percentage
                     _advisorOverlay.LblArchetype.Text = $"Best match: {Math.Round(maxSim * 100, 2)}%";
                     _advisorOverlay.LblStats.Text = "";
-                    _advisorOverlay.Update(Settings.Default.ShowNonMatchingCards ? opponentCardlist.ToList() : new List<Card>(), _currentArchetypeDeckGuid != Guid.Empty);
+                    _advisorOverlay.Update(Settings.Default.ShowNonMatchingCards ? opponentCardList.ToList() : new List<Card>(), _currentArchetypeDeckGuid != Guid.Empty);
                     _currentArchetypeDeckGuid = Guid.Empty;
                 }
             }
@@ -434,7 +450,7 @@ namespace HDT.Plugins.Advisor
         {
             try
             {
-                Process.Start("https://github.com/kimsey0/Advisor");
+                Process.Start("https://github.com/icetbr/Advisor");
             }
             catch (Exception e)
             {
