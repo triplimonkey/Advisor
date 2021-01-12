@@ -80,7 +80,7 @@ namespace HDT.Plugins.Advisor
         {
         }
 
-        public Version Version => new Version(1, 3, 0);
+        public Version Version => new Version(1, 3, 1);
 
         public async Task CheckForUpdate()
         {

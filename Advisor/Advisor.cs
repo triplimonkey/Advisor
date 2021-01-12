@@ -214,6 +214,9 @@ namespace HDT.Plugins.Advisor
 
             // Get opponent's cards list (all yet revealed cards)
             IList<Card> newOpponentCardlist = Core.Game.Opponent.OpponentCardList.Where(x => !x.IsCreated).ToList();
+            if (opponentCardList == null) {
+                opponentCardList = new List<Card>();
+            }
             foreach (var card in newOpponentCardlist)
             {
                 if (!opponentCardList.Contains(card))
