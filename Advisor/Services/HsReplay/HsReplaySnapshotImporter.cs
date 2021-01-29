@@ -103,8 +103,18 @@ namespace HDT.Plugins.Advisor.Services.HsReplay
             Deck deck = new Deck();
 
             HsReplayArchetype archetype = allArchetypesById.TryGetValue(hsReplayDeck.ArchetypeId, out HsReplayArchetype value) ? value : unknownArchetype;
-            deck.Name = archetype.Name;
-            deck.Class = hsReplayClassToDeckTrackerClass[archetype.Class];
+
+            if (hsReplayClassToDeckTrackerClass.TryGetValue(archetype.Class, out string className))
+            {
+                deck.Name = archetype.Name;
+                deck.Class = className;
+            }
+            else
+            {
+                Log.Info($"Archetype class not found {archetype.Class}");
+                deck.Name = "dummyName";
+                deck.Class = archetype.Class;
+            }
             deck.Cards = GetCardsFromHsReplayDeckList(hsReplayDeck.DeckList);
             deck.LastEdited = DateTime.Now;
             deck.Note = hsReplayDeck.DeckId + "-" + hsReplayDeck.TotalGames + "-" + hsReplayDeck.WinRate;
