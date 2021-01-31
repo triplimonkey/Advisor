@@ -69,6 +69,7 @@ namespace HDT.Plugins.Advisor
         public static int GetPlayedGames(this Deck thisDeck)
         {
             string[] infos = thisDeck.Note.Split('-');
+            if (infos.Length <= 0) return 0;
             var success = int.TryParse(infos[1], out int result);
             return success ? result : 0;
         }
