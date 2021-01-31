@@ -80,8 +80,7 @@ namespace HDT.Plugins.Advisor
         {
         }
 
-        public Version Version => new Version(1, 3, 3);
-
+        public Version Version => new Version(1, 3, 4);
         public async Task CheckForUpdate()
         {
             var latest = await Github.CheckForUpdate("icetbr", "Advisor", Version);
