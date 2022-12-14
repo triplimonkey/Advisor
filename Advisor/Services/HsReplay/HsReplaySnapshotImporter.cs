@@ -35,6 +35,7 @@ namespace HDT.Plugins.Advisor.Services.HsReplay
             { "-9", new HsReplayArchetype("-9", "WARLOCK", "Warlock Unknown") },
             { "-10", new HsReplayArchetype("-10", "WARRIOR", "Warrior Unknown") },
             { "-14", new HsReplayArchetype("-14", "DEMONHUNTER", "Demon Hunter Unknown") },
+            { "-15", new HsReplayArchetype("-15", "DEATHKNIGHT", "Death Knight Unknown") },
         };
 
         private static Dictionary<string, string> hsReplayClassToDeckTrackerClass = new Dictionary<string, string>()
@@ -49,6 +50,7 @@ namespace HDT.Plugins.Advisor.Services.HsReplay
             { "WARLOCK", "Warlock" },
             { "WARRIOR", "Warrior" },
             { "DEMONHUNTER", "DemonHunter" },
+            { "DEATHKNIGHT", "DeathKnight" },
         };
 
         // default value in case no archetype is found
